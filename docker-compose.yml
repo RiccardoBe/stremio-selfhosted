@@ -21,7 +21,6 @@ services:
       - proxy
     depends_on:
       - db
-   
   db:
     image: 'yobasystems/alpine-mariadb:latest'
     restart: unless-stopped
@@ -35,7 +34,6 @@ services:
       - ./mysql:/var/lib/mysql
     networks:
       - proxy
-  
   duckdns-updater:
     image: lsioarmhf/duckdns
     container_name: duckdns-updater
@@ -47,7 +45,7 @@ services:
     networks:
       - proxy
   mediaflow_proxy:
-    build: https://github.com/mhdzumair/mediaflow-proxy.git
+    build: https://github.com/RiccardoBe/mediaflow-proxy.git#main
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
@@ -84,8 +82,7 @@ services:
     networks:
       - proxy
   aiostreams:
-    #build: https://github.com/Viren070/AIOStreams.git#main
-    image: ghcr.io/viren070/aiostreams:latest
+    build: https://github.com/RiccardoBe/AIOStreams.git#main
     container_name: aiostreams
     env_file:
       - ./aiostreams/.env
