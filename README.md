@@ -107,7 +107,7 @@ cd <nome-repo>
 | **[StreamV](https://github.com/qwertyuiop8899/StreamV)**|steamv        | 7860(*)          | Web player personalizzato (opzionale)    |
 | **[Nginx Proxy Manager](https://github.com/NginxProxyManager/nginx-proxy-manager)**|npm | 8080/8443/8181 | Reverse proxy + certificati Let's Encrypt |
 | **[docker-duckdns](https://github.com/linuxserver/docker-duckdns)** |duckdns-updater |—         | Aggiorna il DNS dinamicamente            |
-| **[AIOStreams](https://github.com/Viren070/AIOStreams)** |aiostreams |3000(*)        | multipli Stremio addons e servizi debrid in un solo plugin|
+| **[AIOStreams](https://github.com/Viren070/AIOStreams)** |aiostreams |3001(*)        | multipli Stremio addons e servizi debrid in un solo plugin|
 
 >ℹ️ (*)Le **porte elencate (tranne quelle di Nginx Proxy Manager)** sono **interne alla rete Docker** e **non sono esposte direttamente** sulla macchina host.
 Questo significa che i servizi **non sono accessibili dall’esterno se non tramite Nginx Proxy Manager**, che funge da gateway sicuro con supporto a **HTTPS e Let's Encrypt**.
@@ -397,7 +397,7 @@ Per ogni applicazione, crea un nuovo **Proxy Host** in NPM seguendo questi passi
 - **Domain Names:** inserisci l’hostname corrispondente (es. `mammamia.stremio-<tuo id>.duckdns.org`)
 - **Scheme:** `http`
 - **Forward Hostname / IP:** il mome del servizio cosi come configurato nel docker-compose ovvero mammmia, mediaflow_proxy e streamv
-- **Forward Port:** la porta interna dove l’app è in ascolto (es. `8080` per Mammamia, `8888` per mediaflow_proxy, `7860` per streamv e `3000` per aiostreams)
+- **Forward Port:** la porta interna dove l’app è in ascolto (es. `8080` per Mammamia, `8888` per mediaflow_proxy, `7860` per streamv e `3001` per aiostreams)
 - Abilita le seguenti opzioni:
   - **Block Common Exploits**
   - **Websockets Support** (se necessario)
