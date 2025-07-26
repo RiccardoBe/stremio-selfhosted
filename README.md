@@ -102,12 +102,12 @@ cd <nome-repo>
 
 | Servizio           | Nome Servizio Docker | Porta interna | Descrizione                              |
 |--------------------|----------------------|---------------|------------------------------------------|
-| **[Mammamia](https://github.com/UrloMythus/MammaMia)**|mammamia       | 8080(*)          | Plugin personalizzato per Stremio        |
-| **[MediaFlow Proxy (MFP)](https://github.com/mhdzumair/mediaflow-proxy)**|mediaflow_proxy | 8888(*)   | Proxy per streaming video                |
+| **[Mammamia](https://github.com/RiccardoBe/MammaMia)**|mammamia       | 8080(*)          | Plugin personalizzato per Stremio        |
+| **[MediaFlow Proxy (MFP)](https://github.com/RiccardoBe/mediaflow-proxy)**|mediaflow_proxy | 8888(*)   | Proxy per streaming video                |
 | **[StreamV](https://github.com/qwertyuiop8899/StreamV)**|steamv        | 7860(*)          | Web player personalizzato (opzionale)    |
 | **[Nginx Proxy Manager](https://github.com/NginxProxyManager/nginx-proxy-manager)**|npm | 8080/8443/8181 | Reverse proxy + certificati Let's Encrypt |
 | **[docker-duckdns](https://github.com/linuxserver/docker-duckdns)** |duckdns-updater |—         | Aggiorna il DNS dinamicamente            |
-| **[AIOStreams](https://github.com/Viren070/AIOStreams)** |aiostreams |3001(*)        | multipli Stremio addons e servizi debrid in un solo plugin|
+| **[AIOStreams](https://github.com/RiccardoBe/AIOStreams)** |aiostreams |3001(*)        | multipli Stremio addons e servizi debrid in un solo plugin|
 
 >ℹ️ (*)Le **porte elencate (tranne quelle di Nginx Proxy Manager)** sono **interne alla rete Docker** e **non sono esposte direttamente** sulla macchina host.
 Questo significa che i servizi **non sono accessibili dall’esterno se non tramite Nginx Proxy Manager**, che funge da gateway sicuro con supporto a **HTTPS e Let's Encrypt**.
