@@ -16,7 +16,6 @@ services:
     volumes:
       - npm-data:/data
       - npm-letsencrypt:/etc/letsencrypt
-     # - ./npm/certs/lusengir.duckdns.org:/etc/ssl/private:ro
     networks:
       - proxy
     depends_on:
