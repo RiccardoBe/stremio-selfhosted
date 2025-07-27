@@ -78,22 +78,22 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  mammamia:
-    build: ./mammamia
-    container_name: mammamia
-    env_file:
-      - ./mammamia/.env
-    restart: unless-stopped 
-    networks:
-      - proxy
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # mammamia:
+  #   build: ./mammamia
+  #   container_name: mammamia
+  #   env_file:
+  #     - ./mammamia/.env
+  #   restart: unless-stopped 
+  #   networks:
+  #     - proxy
+  #   dns:
+  #     - 1.1.1.1
+  #     - 8.8.8.8
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
   #stremio-docker:
   #  image: tsaridas/stremio-docker:latest
   #  container_name: stremio-docker
