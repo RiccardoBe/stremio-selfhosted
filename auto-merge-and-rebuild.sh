@@ -1,40 +1,55 @@
 #!/bin/bash
 set -e
 
-REPO_DIR="./AIOStreams"
-SERVICE_NAME="aiostreams"
+declare -A SERVICES
+SERVICES["AIOStreams"]="aiostreams"
+SERVICES["mediaflow-proxy"]="mediaflow_proxy"
 
-echo "🔁 Entrando in $REPO_DIR..."
-cd "$REPO_DIR"
+BASE_DIR="/home/pi/stremio-selfhosted"
+UPDATED_SERVICES=()
 
-# Ensure clean state
-git reset --hard
-git clean -fd
+for REPO_NAME in "${!SERVICES[@]}"; do
+    SERVICE_NAME=${SERVICES[$REPO_NAME]}
+    REPO_DIR="$BASE_DIR/$REPO_NAME"
+    BACKUP_BRANCH="backup-before-merge-$(date +%F-%H%M)"
 
-# Checkout main e fetch upstream
-git checkout main
-git pull origin main
-git fetch upstream
+    echo ""
+    echo "🔁 [$SERVICE_NAME] Entrando in $REPO_DIR..."
+    cd "$REPO_DIR"
 
-# Backup prima del merge
-git checkout -b backup-before-merge-$(date +%F-%H%M)
+    git reset --hard
+    git clean -fd
+    git checkout main
+    git pull origin main
+    git fetch upstream
 
-# Torna su main
-git checkout main
+    echo "🔒 Creo backup branch: $BACKUP_BRANCH"
+    git checkout -b "$BACKUP_BRANCH"
+    git checkout main
 
-# Merge
-if git merge --no-edit upstream/main; then
-    echo "✅ Merge riuscito, pushing sul fork..."
-    git push origin main
+    echo "🔀 Merge con upstream/main..."
+    if git merge --no-edit upstream/main; then
+        echo "✅ Merge riuscito per $SERVICE_NAME"
+        git push origin main
+        git branch -D "$BACKUP_BRANCH"
 
-    echo "🔨 Ricompilo immagine Docker..."
-    cd ../
-    docker compose build "$SERVICE_NAME"
-    docker compose up -d --no-deps "$SERVICE_NAME"
+        # Segna che questo servizio va rebuildato
+        UPDATED_SERVICES+=("$SERVICE_NAME")
+    else
+        echo "❌ Merge fallito per $SERVICE_NAME. Aborting..."
+        git merge --abort
+        echo "📌 Rimasto su $BACKUP_BRANCH per recupero."
+    fi
+done
 
-    echo "🚀 Done."
+# Fase di build e up, se necessario
+if [ ${#UPDATED_SERVICES[@]} -gt 0 ]; then
+    echo ""
+    echo "🔨 Ricompilazione immagini Docker per: ${UPDATED_SERVICES[*]}"
+    cd "$BASE_DIR"
+    docker compose build "${UPDATED_SERVICES[@]}"
+    docker compose up -d --no-deps "${UPDATED_SERVICES[@]}"
+    echo "🚀 Aggiornamento completato per: ${UPDATED_SERVICES[*]}"
 else
-    echo "❌ Merge fallito. Aborting..."
-    git merge --abort
-    exit 1
+    echo "✅ Nessun aggiornamento necessario. Tutto già aggiornato."
 fi
