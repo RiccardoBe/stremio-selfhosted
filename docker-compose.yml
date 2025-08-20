@@ -106,11 +106,11 @@ services:
   #  restart: unless-stopped
   #  networks:
   #    - proxy
-  streamv:
-    build: https://github.com/RiccardoBe/streamvix.git#main
-    container_name: streamv
+  streamvix:
+    build: https://github.com/qwertyuiop8899/streamvix.git
+    container_name: streamvix
     # env_file:
-    #   - ./streamv/.env
+    #   - ./streamvix/.env
     restart: unless-stopped 
     networks:
       - proxy

@@ -4,7 +4,6 @@ set -e
 declare -A SERVICES
 SERVICES["AIOStreams"]="aiostreams"
 SERVICES["mediaflow-proxy"]="mediaflow_proxy"
-SERVICES["streamvix"]="streamv"
 
 BASE_DIR="/home/pi/stremio-selfhosted"
 UPDATED_SERVICES=()
