@@ -107,7 +107,7 @@ services:
   #  networks:
   #    - proxy
   streamvix:
-    build: https://github.com/qwertyuiop8899/streamvix.git
+    build: https://github.com/RiccardoBe/streamvix.git#main
     container_name: streamvix
     # env_file:
     #   - ./streamvix/.env
