@@ -144,7 +144,7 @@ services:
 volumes:
   npm-data:
   npm-letsencrypt:
-  duckdns-data:
+#  duckdns-data:
   aiostreams-data:
 
 networks:
