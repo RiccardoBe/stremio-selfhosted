@@ -107,12 +107,11 @@ services:
   #  networks:
   #    - proxy
   streamv:
-    build: https://github.com/qwertyuiop8899/StreamV.git#main
+    build: https://github.com/RiccardoBe/streamvix.git#main
     container_name: streamv
     env_file:
       - ./streamv/.env
     restart: unless-stopped 
-    command: pnpm start
     networks:
       - proxy
     dns:
