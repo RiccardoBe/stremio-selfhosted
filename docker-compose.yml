@@ -47,21 +47,21 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  duckdns-updater:
-    image: lsioarmhf/duckdns
-    container_name: duckdns-updater
-    restart: unless-stopped
-    env_file:
-      - ./duckdns-updater/.env
-    volumes:
-      - duckdns-data:/config
-    networks:
-      - proxy
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # duckdns-updater:
+  #   image: lsioarmhf/duckdns
+  #   container_name: duckdns-updater
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./duckdns-updater/.env
+  #   volumes:
+  #     - duckdns-data:/config
+  #   networks:
+  #     - proxy
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
   mediaflow_proxy:
     build: https://github.com/RiccardoBe/mediaflow-proxy.git#main
     container_name: mediaflow_proxy
