@@ -47,21 +47,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  # duckdns-updater:
-  #   image: lsioarmhf/duckdns
-  #   container_name: duckdns-updater
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./duckdns-updater/.env
-  #   volumes:
-  #     - duckdns-data:/config
-  #   networks:
-  #     - proxy
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
   mediaflow_proxy:
     build: https://github.com/RiccardoBe/mediaflow-proxy.git#main
     container_name: mediaflow_proxy
@@ -94,18 +79,6 @@ services:
   #     options:
   #       max-size: "10m"
   #       max-file: "3"
-  #stremio-docker:
-  #  image: tsaridas/stremio-docker:latest
-  #  container_name: stremio-docker
-  #  ports:
-  #    - "8080:8080"
-  #    - "11470:11470"
-  #  environment:
-  #    - NO_CORS=1
-  #    - CASTING_DISABLED=1
-  #  restart: unless-stopped
-  #  networks:
-  #    - proxy
   streamvix:
     build: https://github.com/RiccardoBe/streamvix.git#main
     container_name: streamvix
@@ -144,7 +117,6 @@ services:
 volumes:
   npm-data:
   npm-letsencrypt:
-#  duckdns-data:
   aiostreams-data:
 
 networks:
