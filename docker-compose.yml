@@ -109,8 +109,8 @@ services:
   streamv:
     build: https://github.com/RiccardoBe/streamvix.git#main
     container_name: streamv
-    env_file:
-      - ./streamv/.env
+    # env_file:
+    #   - ./streamv/.env
     restart: unless-stopped 
     networks:
       - proxy
