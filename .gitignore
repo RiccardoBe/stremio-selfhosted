@@ -1,3 +1,5 @@
 **/.env
 mysql
 cloudflared
+npm-data-backup.tar.gz
+npm-letsencrypt-backup.tar.gz

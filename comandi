@@ -1,0 +1,14 @@
+#backup npm
+# esporta i volumi in archivi tar
+docker run --rm -v npm-data:/volume -v $(pwd):/backup alpine \
+  tar czf /backup/npm-data-backup.tar.gz -C /volume .
+
+docker run --rm -v npm-letsencrypt:/volume -v $(pwd):/backup alpine \
+  tar czf /backup/npm-letsencrypt-backup.tar.gz -C /volume .
+
+# importa i volumi dagli archivi tar
+docker run --rm -v npm-data:/volume -v $(pwd):/backup alpine \
+  tar xzf /backup/npm-data-backup.tar.gz -C /volume
+
+docker run --rm -v npm-letsencrypt:/volume -v $(pwd):/backup alpine \
+  tar xzf /backup/npm-letsencrypt-backup.tar.gz -C /volume
