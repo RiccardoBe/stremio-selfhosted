@@ -4,8 +4,8 @@ services:
     container_name: nginx-proxy-manager
     restart: unless-stopped
     ports:
-      - "8888:80"     # HTTP
-      - "8443:443"    # HTTPS
+      #- "8888:80"     # HTTP
+      #- "8443:443"    # HTTPS
       - "8181:81"     # NPM Admin UI
     environment:
       DB_MYSQL_HOST: "db"
@@ -111,6 +111,15 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+  cloudflared:
+    image: ghcr.io/crazy-max/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run home-gateway
 
 volumes:
   npm-data:
