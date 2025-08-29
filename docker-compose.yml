@@ -1,54 +1,6 @@
 services:
-  npm:
-    image: jc21/nginx-proxy-manager:latest
-    container_name: nginx-proxy-manager
-    restart: unless-stopped
-    ports:
-      #- "8888:80"     # HTTP
-      #- "8443:443"    # HTTPS
-      - "8181:81"     # NPM Admin UI
-    environment:
-      DB_MYSQL_HOST: "db"
-      DB_MYSQL_PORT: 3306
-      DB_MYSQL_USER: "npm"
-      DB_MYSQL_PASSWORD: "npm"
-      DB_MYSQL_NAME: "npm"
-    volumes:
-      - npm-data:/data
-      - npm-letsencrypt:/etc/letsencrypt
-    networks:
-      - proxy
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
-    depends_on:
-      - db
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-  db:
-    image: 'yobasystems/alpine-mariadb:latest'
-    container_name: nginx-proxy-manager-db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: 'npm'
-      MYSQL_DATABASE: 'npm'
-      MYSQL_USER: 'npm'
-      MYSQL_PASSWORD: 'npm'
-      MARIADB_AUTO_UPGRADE: '1'
-    volumes:
-      - ./mysql:/var/lib/mysql
-    networks:
-      - proxy
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
   mediaflow_proxy:
-    build: https://github.com/RiccardoBe/mediaflow-proxy.git#main
+    build: https://github.com/nzo66/mediaflow-proxy.git#main
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
@@ -63,25 +15,18 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  mammamia:
-    build: https://github.com/RiccardoBe/MammaMia.git#main
-    container_name: mammamia
-    restart: unless-stopped 
-    networks:
-      - proxy
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mediaflow_proxy.rule=Host(`${MFP_SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.routers.mediaflow_proxy.entrypoints=web"
+      - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=8888"
+      - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
+
   streamvix:
-    build: https://github.com/RiccardoBe/streamvix.git#main
+    build: https://github.com/qwertyuiop8899/streamvix.git#main
     container_name: streamvix
-    # env_file:
-    #   - ./streamvix/.env
+    env_file:
+      - ./streamvix/.env
     restart: unless-stopped 
     networks:
       - proxy
@@ -93,8 +38,16 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.streamvix.rule=Host(`${STREAMVIX_SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.routers.streamvix.entrypoints=web"
+      - "traefik.http.services.streamvix.loadbalancer.server.port=7860"
+      - "traefik.http.routers.streamvix.middlewares=noindex@docker"
+
   aiostreams:
-    build: https://github.com/RiccardoBe/AIOStreams.git#main
+    # build: https://github.com/RiccardoBe/AIOStreams.git#main
+    image: ghcr.io/viren070/aiostreams:latest
     container_name: aiostreams
     env_file:
       - ./aiostreams/.env
@@ -111,19 +64,14 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  cloudflared:
-    image: ghcr.io/crazy-max/cloudflared:latest
-    container_name: cloudflared
-    restart: unless-stopped
-    networks:
-      - proxy
-    volumes:
-      - ./cloudflared:/etc/cloudflared
-    command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run home-gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.aiostreams.rule=Host(`${AIOSTREAMS_SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.routers.aiostreams.entrypoints=web"
+      - "traefik.http.services.aiostreams.loadbalancer.server.port=3001"
+      - "traefik.http.routers.aiostreams.middlewares=noindex@docker"
 
 volumes:
-  npm-data:
-  npm-letsencrypt:
   aiostreams-data:
 
 networks:
