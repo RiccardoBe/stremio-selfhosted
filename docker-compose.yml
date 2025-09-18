@@ -23,7 +23,8 @@ services:
       - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
 
   streamvix:
-    build: https://github.com/qwertyuiop8899/streamvix.git#main
+    #build: https://github.com/qwertyuiop8899/streamvix.git#main
+    image: qwertyuiop8899/streamvix:latest
     container_name: streamvix
     #env_file:
     #  - ./streamvix/.env
