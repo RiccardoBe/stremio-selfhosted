@@ -1,6 +1,7 @@
 services:
   mediaflow_proxy:
-    build: https://github.com/nzo66/mediaflow-proxy.git#main
+    #build: https://github.com/nzo66/mediaflow-proxy.git#main
+    image: ghcr.io/riccardobe/mediaflow-proxy
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
