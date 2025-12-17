@@ -1,7 +1,6 @@
 services:
   mediaflow_proxy:
-    #build: https://github.com/nzo66/mediaflow-proxy.git#main
-    image: ghcr.io/riccardobe/mediaflow-proxy
+    image: qwertyuiop8899/easyproxy
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
@@ -20,7 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mediaflow_proxy.rule=Host(`${MFP_SUBDOMAIN}.${DOMAIN}`)"
       - "traefik.http.routers.mediaflow_proxy.entrypoints=web"
-      - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=8888"
+      - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=7960"
       - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
 
   streamvix:
@@ -72,6 +71,52 @@ services:
       - "traefik.http.routers.aiostreams.entrypoints=web"
       - "traefik.http.services.aiostreams.loadbalancer.server.port=3001"
       - "traefik.http.routers.aiostreams.middlewares=noindex@docker"
+
+  aiometadata:
+    image: ghcr.io/cedya77/aiometadata:latest
+    container_name: aiometadata
+    env_file:
+      - ./aiometadata/.env
+    restart: unless-stopped
+    environment:
+      - PORT=3232
+      - HOST_NAME=${AIOMETADATA_SUBDOMAIN}.${DOMAIN}
+      - REDIS_URL=redis://aiometadata_redis:6379
+      - META_TTL=604800
+      - CATALOG_TTL=86400
+      - TMDB_TRENDING_TTL=10800
+      - CATALOG_LIST_ITEMS_SIZE=20
+      - LOG_LEVEL=debug
+      - DATABASE_URI=sqlite://addon/data/db.sqlite
+    labels:  # Optional: Remove if not using Traefik
+      - "traefik.enable=true"
+      - "traefik.http.services.aiometadata.loadbalancer.server.port=3232"
+      - "traefik.http.routers.aiometadata.rule=Host(`${AIOMETADATA_SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.routers.aiometadata.entrypoints=web"
+      - "traefik.http.routers.aiometadata.middlewares=noindex@docker"
+    volumes:
+      - ./aiometadata/data:/app/addon/data
+    depends_on:
+      aiometadata_redis:
+        condition: service_healthy
+    tty: true
+    networks:
+      - proxy
+
+  aiometadata_redis:
+    image: redis:latest
+    container_name: aiometadata_redis
+    restart: unless-stopped
+    volumes:
+      - ./aiometadata/cache:/data
+    command: redis-server --appendonly yes --save 60 1
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - proxy
 
 volumes:
   aiostreams-data:
