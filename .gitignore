@@ -5,3 +5,4 @@ npm-data-backup.tar.gz
 npm-letsencrypt-backup.tar.gz
 /aiometadata/cache
 /aiometadata/data
+/jackett/
