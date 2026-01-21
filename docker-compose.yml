@@ -138,7 +138,7 @@ services:
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=Etc/UTC
     volumes:
-      - ./jackett/flaresolverr:/config
+      - ./flaresolverr:/config
     restart: unless-stopped
     logging:
       driver: "json-file"
