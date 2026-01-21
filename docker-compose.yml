@@ -128,32 +128,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - AUTO_UPDATE=true #optional
-    volumes:
-      - ./jackett/data:/config
-      - ./jackett/downloads:/downloads
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.rule=Host(`${JACKETT_SUBDOMAIN}.${DOMAIN}`)"
-      - "traefik.http.routers.jackett.entrypoints=web"
-      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
-      - "traefik.http.routers.jackett.middlewares=noindex@docker"
-    networks:
-      - proxy
-    
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -174,23 +148,25 @@ services:
     networks:
       - proxy
 
-  stremio-addon-jackett:
-    image: belmeg/stremio-addon-jackett:latest
-    container_name: stremio-addon-jackett
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
     restart: unless-stopped
+    networks:
+      - proxy
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.stremio-addon-jackett.rule=Host(`${STREMIO_ADDON_JACKETT_SUBDOMAIN}.${DOMAIN}`)"
-      - "traefik.http.routers.stremio-addon-jackett.entrypoints=web"
-      - "traefik.http.services.stremio-addon-jackett.loadbalancer.server.port=3000"
-      - "traefik.http.routers.stremio-addon-jackett.middlewares=noindex@docker"
-    networks:
-      - proxy
 
 volumes:
   aiostreams-data:
