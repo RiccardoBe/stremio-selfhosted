@@ -195,16 +195,22 @@ services:
         max-file: "3"
     networks:
       - proxy
-    labels:  # Optional: Remove if not using Traefik
+    labels:
       - "traefik.enable=true"
-      - "traefik.http.services.comet.loadbalancer.server.port=8000"
+
+      # ===== comet.lusengir.com  -> 8000 =====
       - "traefik.http.routers.comet.rule=Host(`${COMET_SUBDOMAIN}.${DOMAIN}`)"
       - "traefik.http.routers.comet.entrypoints=web"
       - "traefik.http.routers.comet.middlewares=noindex@docker"
-      - "traefik.http.services.cometnet.loadbalancer.server.port=8765"
+      - "traefik.http.routers.comet.service=comet-svc"
+      - "traefik.http.services.comet-svc.loadbalancer.server.port=8000"
+
+      # ===== cometnet.lusengir.com -> 8765 =====
       - "traefik.http.routers.cometnet.rule=Host(`${COMETNET_SUBDOMAIN}.${DOMAIN}`)"
       - "traefik.http.routers.cometnet.entrypoints=web"
       - "traefik.http.routers.cometnet.middlewares=noindex@docker"
+      - "traefik.http.routers.cometnet.service=cometnet-svc"
+      - "traefik.http.services.cometnet-svc.loadbalancer.server.port=8765"
 
   postgres-comet:
     container_name: comet-postgres
