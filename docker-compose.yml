@@ -128,45 +128,45 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_FILE=${LOG_FILE:-none}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=Etc/UTC
-    volumes:
-      - ./flaresolverr:/config
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      - proxy
+  # flaresolverr:
+  #   image: ghcr.io/flaresolverr/flaresolverr:latest
+  #   container_name: flaresolverr
+  #   environment:
+  #     - LOG_LEVEL=${LOG_LEVEL:-info}
+  #     - LOG_FILE=${LOG_FILE:-none}
+  #     - LOG_HTML=${LOG_HTML:-false}
+  #     - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - ./flaresolverr:/config
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   networks:
+  #     - proxy
 
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ./prowlarr:/config
-    ports:
-      - 9696:9696
-    restart: unless-stopped
-    networks:
-      - proxy
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # prowlarr:
+  #   image: lscr.io/linuxserver/prowlarr:latest
+  #   container_name: prowlarr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - ./prowlarr:/config
+  #   ports:
+  #     - 9696:9696
+  #   restart: unless-stopped
+  #   networks:
+  #     - proxy
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
 
   comet:
     container_name: comet
