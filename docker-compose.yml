@@ -1,6 +1,6 @@
 services:
   mediaflow_proxy:
-    image: qwertyuiop8899/easyproxy
+    image: ghcr.io/realbestia1/easyproxy:latest
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
@@ -170,7 +170,7 @@ services:
 
   comet:
     container_name: comet
-    image: g0ldyy/comet
+    image: ghcr.io/g0ldyy/comet
     restart: unless-stopped
     ports:
       - "8000:8000"
