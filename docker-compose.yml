@@ -1,6 +1,7 @@
 services:
   mediaflow_proxy:
-    image: ghcr.io/realbestia1/easyproxy:latest
+    build: https://github.com/stremio-manager/EasyProxy.git
+    #image: ghcr.io/realbestia1/easyproxy:latest
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
@@ -21,6 +22,8 @@ services:
       - "traefik.http.routers.mediaflow_proxy.entrypoints=web"
       - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=7960"
       - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
+    environment:
+      - TZ=Etc/UTC
 
   streamvix:
     #build: https://github.com/qwertyuiop8899/streamvix.git#main
@@ -45,6 +48,8 @@ services:
       - "traefik.http.routers.streamvix.entrypoints=web"
       - "traefik.http.services.streamvix.loadbalancer.server.port=7860"
       - "traefik.http.routers.streamvix.middlewares=noindex@docker"
+    environment:
+      - TZ=Etc/UTC
 
   aiostreams:
     # build: https://github.com/RiccardoBe/AIOStreams.git#main
@@ -71,6 +76,8 @@ services:
       - "traefik.http.routers.aiostreams.entrypoints=web"
       - "traefik.http.services.aiostreams.loadbalancer.server.port=3001"
       - "traefik.http.routers.aiostreams.middlewares=noindex@docker"
+    environment:
+      - TZ=Etc/UTC
 
   aiometadata:
     image: ghcr.io/cedya77/aiometadata:latest
@@ -88,6 +95,8 @@ services:
       - CATALOG_LIST_ITEMS_SIZE=20
       - LOG_LEVEL=debug
       - DATABASE_URI=sqlite://addon/data/db.sqlite
+      - TZ=Etc/UTC
+
     labels:  # Optional: Remove if not using Traefik
       - "traefik.enable=true"
       - "traefik.http.services.aiometadata.loadbalancer.server.port=3232"
@@ -107,7 +116,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
+  
   aiometadata_redis:
     image: redis:latest
     container_name: aiometadata_redis
@@ -127,6 +136,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    environment:
+      - TZ=Etc/UTC
 
   # flaresolverr:
   #   image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -180,6 +191,7 @@ services:
       DATABASE_URL: comet:comet@postgres-comet:5432/comet
       COMETNET_ENABLED: "True"
       FASTAPI_WORKERS: "1"
+      TZ: Etc/UTC
     env_file:
       - ./comet/.env
     volumes:
@@ -220,6 +232,7 @@ services:
       POSTGRES_USER: comet
       POSTGRES_PASSWORD: comet
       POSTGRES_DB: comet
+      TZ: Etc/UTC
     volumes:
       - postgres_data:/var/lib/postgresql/
     healthcheck:
