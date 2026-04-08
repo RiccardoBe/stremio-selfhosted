@@ -1,7 +1,7 @@
 services:
   mediaflow_proxy:
-    build: https://github.com/stremio-manager/EasyProxy.git
-    #image: ghcr.io/realbestia1/easyproxy:latest
+    #build: https://github.com/mhdzumair/mediaflow-proxy
+    image: mhdzumair/mediaflow-proxy
     container_name: mediaflow_proxy
     env_file:
       - ./mfp/.env
