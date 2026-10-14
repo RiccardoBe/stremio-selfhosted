@@ -8,3 +8,6 @@ npm-letsencrypt-backup.tar.gz
 /prowlarr/
 /flaresolverr/
 /comet/data/
+/easyproxy/data/
+/mfp/mediaflow-proxy/
+/comet/weekly-restart.log

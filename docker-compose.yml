@@ -1,11 +1,39 @@
 services:
-  mediaflow_proxy:
-    #build: https://github.com/mhdzumair/mediaflow-proxy
-    image: mhdzumair/mediaflow-proxy
-    container_name: mediaflow_proxy
+  # --- Sostituito da EasyProxy il 2026-09-19. Ricommenta e ferma easyproxy per ripristinare. ---
+  # mediaflow_proxy:
+  #   #build: https://github.com/mhdzumair/mediaflow-proxy
+  #   image: mhdzumair/mediaflow-proxy
+  #   container_name: mediaflow_proxy
+  #   env_file:
+  #     - ./mfp/.env
+  #   restart: unless-stopped
+  #   networks:
+  #     - proxy
+  #   dns:
+  #     - 1.1.1.1
+  #     - 8.8.8.8
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.mediaflow_proxy.rule=Host(`${MFP_SUBDOMAIN}.${DOMAIN}`)"
+  #     - "traefik.http.routers.mediaflow_proxy.entrypoints=web"
+  #     - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=7960"
+  #     - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
+  #   environment:
+  #     - TZ=Etc/UTC
+
+  easyproxy:
+    image: ghcr.io/realbestia1/easyproxy:latest
+    container_name: easyproxy
     env_file:
-      - ./mfp/.env
+      - ./easyproxy/.env
     restart: unless-stopped
+    volumes:
+      - ./easyproxy/data:/data
     networks:
       - proxy
     dns:
@@ -18,10 +46,10 @@ services:
         max-file: "3"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mediaflow_proxy.rule=Host(`${MFP_SUBDOMAIN}.${DOMAIN}`)"
-      - "traefik.http.routers.mediaflow_proxy.entrypoints=web"
-      - "traefik.http.services.mediaflow_proxy.loadbalancer.server.port=7960"
-      - "traefik.http.routers.mediaflow_proxy.middlewares=noindex@docker"
+      - "traefik.http.routers.easyproxy.rule=Host(`${MFP_SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.routers.easyproxy.entrypoints=web"
+      - "traefik.http.services.easyproxy.loadbalancer.server.port=7860"
+      - "traefik.http.routers.easyproxy.middlewares=noindex@docker"
     environment:
       - TZ=Etc/UTC
 
@@ -139,49 +167,59 @@ services:
     environment:
       - TZ=Etc/UTC
 
-  # flaresolverr:
-  #   image: ghcr.io/flaresolverr/flaresolverr:latest
-  #   container_name: flaresolverr
-  #   environment:
-  #     - LOG_LEVEL=${LOG_LEVEL:-info}
-  #     - LOG_FILE=${LOG_FILE:-none}
-  #     - LOG_HTML=${LOG_HTML:-false}
-  #     - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-  #     - TZ=Etc/UTC
-  #   volumes:
-  #     - ./flaresolverr:/config
-  #   restart: unless-stopped
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  #   networks:
-  #     - proxy
+  # Riattivati il 2026-10-14. A febbraio fallivano per DNS (ERR_NAME_NOT_RESOLVED):
+  # aggiunti gli stessi dns degli altri servizi dello stack.
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Etc/UTC
+    volumes:
+      - ./flaresolverr:/config
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - proxy
 
-  # prowlarr:
-  #   image: lscr.io/linuxserver/prowlarr:latest
-  #   container_name: prowlarr
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Etc/UTC
-  #   volumes:
-  #     - ./prowlarr:/config
-  #   ports:
-  #     - 9696:9696
-  #   restart: unless-stopped
-  #   networks:
-  #     - proxy
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    networks:
+      - proxy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   comet:
     container_name: comet
-    image: ghcr.io/g0ldyy/comet
+    # Fork con PR #637, #630 e fix memoria CometNet (backport 84679ec). Rollback: rimetti ghcr.io/g0ldyy/comet
+    image: ghcr.io/riccardobe/comet:latest
+    # image: ghcr.io/g0ldyy/comet
     restart: unless-stopped
     ports:
       - "8000:8000"
